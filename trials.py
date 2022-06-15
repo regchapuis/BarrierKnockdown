@@ -141,8 +141,9 @@ def trial_FSM(board):
 
 
             ui.data_table.insert(parent='', index='end', iid=ui.iid_count, text='',
-                              values=(ui.name_value.get(), ui.subj_num_value.get(), ui.testtype_value.get(), ui.group_value.get(), trials, get_color(), pattern_check, reaction_time,
-                                      movement_time))
+                              values=(ui.name_value.get(), ui.subj_num_value.get(), ui.testtype_value.get(),
+                                      ui.group_value.get(), trials, get_color(), pattern_check, (int)(reaction_time*1000),
+                                      (int)(movement_time*1000)))
             ui.iid_count += 1
         increment_count()
 
@@ -228,6 +229,12 @@ def next_color():
 
     elif g == "Serial": #colors in order!
         color = (color+1)%len(colors)
+    elif g == "Red":
+        color = RED
+    elif g == "Green":
+        color = GREEN
+    elif g == "Blue":
+        color = BLUE
     else:
         print("Invalid Group Type")
 

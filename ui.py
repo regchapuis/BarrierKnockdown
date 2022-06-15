@@ -66,7 +66,9 @@ def test_trial():
         movement_t = random.random()
         trial_num = trial_num + 1
         data_table.insert(parent='',index='end',iid=iid_count,text='',
-                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(), group_value.get(), trial_num, 'Red', 'yes', reaction_t, movement_t))
+                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(),
+                                  group_value.get(), trial_num, 'Red', 'yes',
+                                  (int)(reaction_t*1000), (int)(movement_t*1000)))
         iid_count += 1
 
 def parse_input(num):
@@ -86,12 +88,15 @@ def fill_red(num):
 
 #CSV code from : https://stackoverflow.com/questions/62580527/saving-datas-from-treeview-to-csv-file-tkinter-python
 def save_csv():
-    global data_table
+    global data_table, table_cols
     # print("csv!")
-    str = "data"+ datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + ".csv"
+    #str = "data"+ datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + ".csv"
+    str = name_value.get() + "-" +subj_num_value.get() + "-"+ testtype_value.get()+ \
+          datetime.datetime.now().strftime("%d-%m-%Y-%H-%M-%S") + ".csv"
     with open(str, "w", newline='') as myfile:
         csvwriter = csv.writer(myfile, delimiter=',')
-
+        row1 = table_cols
+        csvwriter.writerow(row1)
         for row_id in data_table.get_children():
             row = data_table.item(row_id)['values']
             # print('save row:', row)
@@ -143,12 +148,14 @@ def manual_trial_prompt():
     res = messagebox.askyesno("Trial", "Did the subject get the pattern correct?")
     if res:
         data_table.insert(parent='', index='end', iid=iid_count, text='',
-                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(), group_value.get(), trials.trials, trials.get_color(), 'yes', trials.get_reaction_time(),
-                                  trials.get_movement_time()))
+                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(), group_value.get(), trials.trials, trials.get_color(), 'yes',
+                                  (int)(trials.get_reaction_time()),
+                                  (int)(trials.get_movement_time())))
     else:
         data_table.insert(parent='', index='end', iid=iid_count, text='',
-                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(), group_value.get(), trials.trials, trials.get_color(), 'no', trials.get_reaction_time(),
-                                  trials.get_movement_time()))
+                          values=(name_value.get(), subj_num_value.get(), testtype_value.get(), group_value.get(), trials.trials, trials.get_color(), 'no',
+                                  (int)(trials.get_reaction_time()),
+                                  (int)(trials.get_movement_time())))
     iid_count+=1
 
 def ready_prompt():
@@ -218,7 +225,7 @@ subj_num_value = tk.StringVar(window)
 subj_num_value.set("1")
 entry_subj_num = tk.Entry(sidebar2, width=20, textvariable = subj_num_value)
 
-group_options = ["Random", "Moderate", "Transitional", "Blocked", "Serial"]
+group_options = ["Random", "Moderate", "Transitional", "Blocked", "Serial", "Red", "Green", "Blue"]
 group_value = tk.StringVar(window)
 group_value.set("Random")
 entry_group = ttk.Combobox(sidebar2, textvariable = group_value)
@@ -286,8 +293,8 @@ data_table.heading('interference', text='Pattern')
 data_table.heading('trial', text='Trial #')
 data_table.heading('correct', text='Correct')
 data_table.heading('pattern', text='Color')
-data_table.heading('reaction_time', text='Reaction Time')
-data_table.heading('movement_time', text='Movement Time')
+data_table.heading('reaction_time', text='Reaction Time (ms)')
+data_table.heading('movement_time', text='Movement Time (ms)')
 
 data_table.column('#1', width =75)
 data_table.column('#2', width =75)
@@ -296,8 +303,8 @@ data_table.column('#4', width =75)
 data_table.column('#5', width =50)
 data_table.column('#6', width =50)
 data_table.column('#7', width =50)
-data_table.column('#8', width =100)
-data_table.column('#9', width =100)
+data_table.column('#8', width =125)
+data_table.column('#9', width =125)
 
 #csv section
 btn_save = tk.Button(sidebar3, text="Save Data", command=save_csv)

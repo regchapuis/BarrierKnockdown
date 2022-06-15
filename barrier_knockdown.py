@@ -7,6 +7,7 @@ import trials
 
 if __name__ == '__main__':
 
+    #uncomment this to test just the UI without arduino
     # while True:
     #     ui.window.update()
 
